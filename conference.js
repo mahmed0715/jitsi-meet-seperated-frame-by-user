@@ -1013,6 +1013,7 @@ export default {
      * NOTE: Used by jitsi-meet-torture!
      */
     listMembers() {
+        // console.log('mustak list members:', room.getParticipants());
         return room.getParticipants();
     },
 
@@ -1131,6 +1132,7 @@ export default {
      * null if not found.
      */
     getParticipantById(id) {
+        // console.log('mustak get particpant by id', room.getParticipants())
         return room ? room.getParticipantById(id) : null;
     },
 

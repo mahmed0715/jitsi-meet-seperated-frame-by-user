@@ -115,7 +115,8 @@ UI.initConference = function() {
     const { getState } = APP.store;
     const { id, name } = getLocalParticipant(getState);
 
-    UI.showToolbar();
+    // hide toolbar is this is a listener only participant
+    !APP.participantId && UI.showToolbar();
 
     const displayName = config.displayJids ? id : name;
 
@@ -143,7 +144,7 @@ UI.start = function() {
     $.prompt.setDefaults({ persistent: false });
 
     VideoLayout.init(eventEmitter);
-    if (!interfaceConfig.filmStripOnly) {
+    if (!interfaceConfig.filmStripOnly || APP.participantId) {
         VideoLayout.initLargeVideo();
     }
 
@@ -173,6 +174,8 @@ UI.start = function() {
 
         APP.store.dispatch(setToolboxEnabled(false));
         UI.messageHandler.enablePopups(false);
+    }else if(APP.participantId){
+        APP.store.dispatch(setNotificationsEnabled(false));
     }
 };
 

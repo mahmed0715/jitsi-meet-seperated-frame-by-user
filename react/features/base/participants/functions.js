@@ -97,6 +97,8 @@ export function getNormalizedDisplayName(name: string) {
     return name.trim().substring(0, MAX_DISPLAY_NAME_LENGTH);
 }
 
+
+
 /**
  * Returns participant by ID from Redux state.
  *
@@ -108,9 +110,14 @@ export function getNormalizedDisplayName(name: string) {
  * @private
  * @returns {(Participant|undefined)}
  */
+
 export function getParticipantById(
         stateful: Object | Function, id: string): ?Object {
-    const participants = _getAllParticipants(stateful);
+    const participants = _getAllParticipants(stateful).map(p => {
+        if(!p.isFakeParticipant) 
+            p.isFakeParticipant = APP.isListener(p.name);
+        return p; 
+    });
 
     return participants.find(p => p.id === id);
 }
@@ -209,7 +216,11 @@ export function getParticipantPresenceStatus(
  * @returns {Participant[]}
  */
 export function getParticipants(stateful: Object | Function) {
-    return _getAllParticipants(stateful).filter(p => !p.isFakeParticipant);
+    
+    return _getAllParticipants(stateful).filter(p => {
+        console.log('mustak participants: ',p.name,' ID:', p.id, ' target: ', APP.participantId);
+        return !p.isFakeParticipant
+    });
 }
 
 /**

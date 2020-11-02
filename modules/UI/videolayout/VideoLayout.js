@@ -64,6 +64,7 @@ function getAllThumbnails() {
  * @returns {Object}
  */
 function getLocalParticipant() {
+    console.log('mustak: Local participant', getLocalParticipantFromStore(APP.store.getState()));
     return getLocalParticipantFromStore(APP.store.getState());
 }
 
@@ -296,12 +297,22 @@ const VideoLayout = {
         const id = participant.id;
         const jitsiParticipant = APP.conference.getParticipantById(id);
         const remoteVideo = new RemoteVideo(jitsiParticipant, VideoLayout);
+        if(!APP.participantId) {
+            this._setRemoteControlProperties(jitsiParticipant, remoteVideo);
+            this.addRemoteVideoContainer(id, remoteVideo);
 
-        this._setRemoteControlProperties(jitsiParticipant, remoteVideo);
-        this.addRemoteVideoContainer(id, remoteVideo);
+            this.updateMutedForNoTracks(id, 'audio');
+            this.updateMutedForNoTracks(id, 'video');
+        }
+        if(APP.participantId && id == APP.participantId) {
+            this._setRemoteControlProperties(jitsiParticipant, remoteVideo);
+            this.addRemoteVideoContainer(id, remoteVideo);
 
-        this.updateMutedForNoTracks(id, 'audio');
-        this.updateMutedForNoTracks(id, 'video');
+            this.updateMutedForNoTracks(id, 'audio');
+            this.updateMutedForNoTracks(id, 'video');
+            console.log('mustak: rendered remote container', jitsiParticipant, id == APP.participantId);
+            setTimout(()=>{this._updateLargeVideoIfDisplayed(App.participantId, true)}, 1000);
+        }
     },
 
     /**
@@ -312,6 +323,9 @@ const VideoLayout = {
      * remote video
      */
     addRemoteVideoContainer(id, remoteVideo) {
+        if(APP.participantId && APP.participantId != id )
+            return;
+            
         remoteVideos[id] = remoteVideo;
 
         // Initialize the view
@@ -572,6 +586,7 @@ const VideoLayout = {
         if (!isOnLarge || forceUpdate) {
             const videoType = this.getRemoteVideoType(id);
 
+            console.log('mustak: updating large video', id, forceUpdate);
 
             largeVideo.updateLargeVideo(
                 id,
@@ -581,6 +596,7 @@ const VideoLayout = {
                 // do nothing
             });
         }
+        console.log('mustak: URL for single user', id);
     },
 
     addLargeVideoContainer(type, container) {
@@ -627,7 +643,7 @@ const VideoLayout = {
                 containerTypeToShow = VIDEO_CONTAINER_TYPE;
             }
         }
-
+        console.log('mustak: large video show container', type, show)
         return largeVideo.showContainer(containerTypeToShow)
             .then(() => {
                 if (oldSmallVideo) {

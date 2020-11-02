@@ -142,7 +142,7 @@ class Filmstrip extends Component <Props> {
      * @inheritdoc
      */
     componentDidMount() {
-        if (!this.props._filmstripOnly) {
+        if (!this.props._filmstripOnly && !APP.participantId) {
             APP.keyboardshortcut.registerShortcut(
                 'F',
                 'filmstripPopover',
@@ -150,6 +150,8 @@ class Filmstrip extends Component <Props> {
                 'keyboardShortcuts.toggleFilmstrip'
             );
         }
+        // hide filmstrip remote videos 
+        APP.participantId && this.props.dispatch(setFilmstripVisible(false));
     }
 
     /**
@@ -218,7 +220,7 @@ class Filmstrip extends Component <Props> {
                 <div
                     className = { this.props._videosClassName }
                     id = 'remoteVideos'>
-                    <div
+                         <div
                         className = 'filmstrip__videos'
                         id = 'filmstripLocalVideo'
                         onMouseOut = { this._onMouseOut }
@@ -345,14 +347,14 @@ class Filmstrip extends Component <Props> {
         const { t } = this.props;
 
         return (
-            <div className = 'filmstrip__toolbar'>
+            !APP.participantId ? <div className = 'filmstrip__toolbar'>
                 <button
                     aria-label = { t('toolbar.accessibilityLabel.toggleFilmstrip') }
                     id = 'toggleFilmstripButton'
                     onClick = { this._onToolbarToggleFilmstrip }>
                     <Icon src = { icon } />
                 </button>
-            </div>
+            </div>:<div></div>
         );
     }
 }

@@ -132,7 +132,7 @@ export function showToolbox(timeout: number = 0): Object {
             visible
         } = state['features/toolbox'];
 
-        if (enabled && !visible) {
+        if (enabled && !visible && !APP.participantId) {
             dispatch(setToolboxVisible(true));
 
             // If the Toolbox is always visible, there's no need for a timeout
@@ -145,5 +145,9 @@ export function showToolbox(timeout: number = 0): Object {
                 dispatch(setToolboxTimeoutMS(interfaceConfig.TOOLBAR_TIMEOUT));
             }
         }
+        if (APP.participantId) {
+            dispatch(setToolboxVisible(false));
+        }
+
     };
 }

@@ -86,7 +86,7 @@ export default class RemoteVideo extends SmallVideo {
         this.addRemoteVideoContainer();
         this.updateIndicators();
         this.updateDisplayName();
-        this.bindHoverHandler();
+        !APP.participantId && this.bindHoverHandler();
         this.flipX = false;
         this.isLocal = false;
         this._isRemoteControlSessionActive = false;

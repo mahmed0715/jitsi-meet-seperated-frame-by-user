@@ -39,7 +39,7 @@ export default class LocalVideo extends SmallVideo {
         this.updateDOMLocation();
 
         this.localVideoId = null;
-        this.bindHoverHandler();
+        !APP.participantId && this.bindHoverHandler();
         if (!config.disableLocalVideoFlip) {
             this._buildContextMenu();
         }
@@ -248,8 +248,9 @@ export default class LocalVideo extends SmallVideo {
         if (this.container.parentElement) {
             this.container.parentElement.removeChild(this.container);
         }
-
-        const appendTarget = shouldDisplayTileView(APP.store.getState())
+        console.log('mustak should display tile vie',  APP.store.getState(), APP.participantId, shouldDisplayTileView(APP.store.getState()));
+        
+        const appendTarget = !APP.participantId && shouldDisplayTileView(APP.store.getState())
             ? document.getElementById('localVideoTileViewContainer')
             : document.getElementById('filmstripLocalVideoThumbnail');
 

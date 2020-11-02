@@ -107,7 +107,7 @@ export default class LargeVideoManager {
             display: 'inline-block'
         });
 
-        this.$container.hover(
+        !APP.participantId && this.$container.hover(
             e => this.onHoverIn(e),
             e => this.onHoverOut(e)
         );

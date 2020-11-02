@@ -1,0 +1,28 @@
+1. initiate as a fake participant with(will not ask for audio/video permission)
+
+
+
+
+
+
+
+https://localhost:8080/test1233#config.prejoinPageEnabled=false
+
+
+// put the id for an user and put it in p=<id> in this following url
+https://localhost:8080/test1233?p=709e1063#config.startWithAudioMuted=true&config.channelLastN=0&config.startWithVideoMuted=true&config.prejoinPageEnabled=false
+
+
+2. join automatically without button click, automate the join process: // done
+2. move the desired users video container to very front // done
+
+3. hide all the controlls and clean the UI if the id provided or our special params provided
+
+4. make the view only user as invisible in other users UI...//// imp
+
+5. remove some of the events//clean up
+
+
+//////////
+in videoLayout
+call _updateLargeVideoIfDisplayed on full initialization

@@ -12,6 +12,7 @@ import 'focus-visible';
 // NOTE: If jitsi-local-storage is used before the initial setup is performed this will break the use case when we use
 // the  local storage from the parent page when the localStorage is disabled. Also the setup is relying that
 // window.location is not changed and still has all URL parameters.
+import { parseURLParams, getURlParams } from './react/features/base/util/parseURLParams';
 import './react/features/base/jitsi-local-storage/setup';
 import conference from './conference';
 import API from './modules/API';
@@ -27,11 +28,25 @@ if (window.Olm) {
         delete window.Olm;
     });
 }
+const generateId = () => {
+    return "XXX_FAKE_listerner_"+ Math.random();
+}
+const isListener = (id) => { 
+    return id.indexOf('XXX_FAKE_listener_') == 0;
+}
+let participantId = 0;
+try {
+    const urlParams = getURlParams(window.location, 'search');
+    console.log('mustak: urlParams', urlParams);
+    participantId = urlParams['p'] ? urlParams['p'] : 0;
+}catch(error){
+    console.log('URL parse error, ', error);
+}
 
 window.APP = {
     API,
     conference,
-
+    participantId,
     // Used by do_external_connect.js if we receive the attach data after
     // connect was already executed. status property can be 'initialized',
     // 'ready', or 'connecting'. We are interested in 'ready' status only which
@@ -51,9 +66,11 @@ window.APP = {
     keyboardshortcut,
     remoteControl,
     translation,
-    UI
+    UI,
+    generateId,
+    isListener
 };
-
+console.log('mustak: already set participantId:', window.APP.participantId);
 // TODO The execution of the mobile app starts from react/index.native.js.
 // Similarly, the execution of the Web app should start from react/index.web.js
 // for the sake of consistency and ease of understanding. Temporarily though
